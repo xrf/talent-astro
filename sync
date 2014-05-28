@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+# note: does not work with gfortran 4.4 or lower
 
 [ -z "$FC" ] && FC=gfortran
 
@@ -14,8 +15,8 @@ get() {
 DOWNLOAD_DIR=downloads
 mkdir -p "$DOWNLOAD_DIR"
 
-NSCL_WIKI_FETCH=https://wikihost.nscl.msu.edu/talent/lib/exe/fetch.php?media
 # origin: https://wikihost.nscl.msu.edu/talent/doku.php?id=rxnnetcode
+NSCL_WIKI_FETCH=https://wikihost.nscl.msu.edu/talent/lib/exe/fetch.php?media
 get >"$DOWNLOAD_DIR"/xnet_public.zip \
     "$NSCL_WIKI_FETCH"=xnet_public.zip
 get >"$DOWNLOAD_DIR"/reducereaclib.tar.gz \
@@ -90,7 +91,7 @@ cp "$DOWNLOAD_DIR"/winvn_v2.0.dat reducereaclib/INPUT/winvn
     ./reducereaclib
 )
 
-tar xzf "$DOWNLOAD_DIR"/bigbang.tbz
+tar xjf "$DOWNLOAD_DIR"/bigbang.tbz
 (
     cd bigbang
     "$FC" -O2 -o public_bigbang public_bigbang.f90
