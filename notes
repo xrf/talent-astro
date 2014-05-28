@@ -1,0 +1,34 @@
+observables (for the 4%):
+- light/photons
+- wavelength
+- polarization "pol^n_"
+- cosmic rays (non-photons)
+- neutrinos
+- experiments
+- composition (meteorites, lunar)
+
+forest lines = multiple redshifted lines
+deuterium appears as a slightly lower wavelength compared to H
+("thumbprint of deuterium")
+deuterium is fragile = primordial material [very sensitive baryometer]
+
+information encoded in spectra
+
+abundance (molar fraction) Y = n / (rho N_A)
+where n is number density, rho is mass density, and N_A is the Avogadro number.
+
+mass fraction, X = A Y where A is molecular weight
+
+cross section is a function of relative velocity (= energy)
+reaction rate is a function of temperature (!= energy)
+
+for MB distribution
+= integral sigma(E) E exp(-E) dE
+
+
+S-factor is slowly varying, keV-barns
+
+
+
+Questions:
+- why does the asymptotic method fail for 10^10 or higher stiffness? (What makes 10^10 special?)

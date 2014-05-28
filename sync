@@ -29,12 +29,11 @@ get >"$DOWNLOAD_DIR"/VH1.tar \
 # origin:
 #   https://groups.nscl.msu.edu/jina/reaclib/db/library.php?action=viewsnapshots
 #   default, Reaclib1 Format, Original format
-REACLIB_VER=20140527defaultno910
-JINA_DB=https://groups.nscl.msu.edu/jina/reaclib/db
-get >"$DOWNLOAD_DIR"/"$REACLIB_VER".gz \
-    "$JINA_DB"/reaclibs/"$REACLIB_VER".gz
-get >"$DOWNLOAD_DIR"/winvn_v2.0.dat \
-    "$JINA_DB"/associated_files/Recommended/winvn_v2.0.dat
+U=https://groups.nscl.msu.edu/jina/reaclib/db
+get >"$DOWNLOAD_DIR/reaclib.gz" \
+    "$U/difout.php?action=cfreaclib&library=default&rateall=1&cached=Daily&no910=1"
+get >"$DOWNLOAD_DIR/winvn_v2.0.dat" \
+    "$U/associated_files/Recommended/winvn_v2.0.dat"
 
 # origin: http://cococubed.asu.edu/code_pages/net_bigbang.shtml
 get >"$DOWNLOAD_DIR"/bigbang.tbz \
@@ -79,10 +78,10 @@ rm -rf ._VH1
     )
 )
 
-cp "$DOWNLOAD_DIR"/"$REACLIB_VER".gz \
-   "$DOWNLOAD_DIR"/"$REACLIB_VER".copy.gz
+cp "$DOWNLOAD_DIR"/reaclib.gz \
+   "$DOWNLOAD_DIR"/reaclib.copy.gz
 gzip >reducereaclib/INPUT/rawreaclib -cd \
-     "$DOWNLOAD_DIR"/"$REACLIB_VER".copy.gz
+     "$DOWNLOAD_DIR"/reaclib.copy.gz
 cp "$DOWNLOAD_DIR"/winvn_v2.0.dat reducereaclib/INPUT/winvn
 
 (
@@ -96,10 +95,7 @@ tar xjf "$DOWNLOAD_DIR"/bigbang.tbz
     cd bigbang
     "$FC" -O2 -o public_bigbang public_bigbang.f90
     ./public_bigbang <<EOF
-0
-6.23e-10
-70.5
-2.725
+
 1e6
 ??? what network file ???
 foo_
