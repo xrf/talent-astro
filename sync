@@ -1,0 +1,106 @@
+#!/bin/sh
+set -e
+
+[ -z "$FC" ] && FC=gfortran
+
+get() {
+    curl -fL "$@" || {
+        EXIT=$?
+        echo >&2 "curl: arguments: $@";
+        exit $EXIT
+    }
+}
+
+DOWNLOAD_DIR=downloads
+mkdir -p "$DOWNLOAD_DIR"
+
+NSCL_WIKI_FETCH=https://wikihost.nscl.msu.edu/talent/lib/exe/fetch.php?media
+# origin: https://wikihost.nscl.msu.edu/talent/doku.php?id=rxnnetcode
+get >"$DOWNLOAD_DIR"/xnet_public.zip \
+    "$NSCL_WIKI_FETCH"=xnet_public.zip
+get >"$DOWNLOAD_DIR"/reducereaclib.tar.gz \
+    "$NSCL_WIKI_FETCH"=reducereaclib.tar.gz
+
+# origin: http://astro.physics.ncsu.edu/pub/VH-1/codes.php
+get >"$DOWNLOAD_DIR"/VH1.tar \
+    http://astro.physics.ncsu.edu/pub/VH-1/VH1.tar
+
+# origin:
+#   https://groups.nscl.msu.edu/jina/reaclib/db/library.php?action=viewsnapshots
+#   default, Reaclib1 Format, Original format
+REACLIB_VER=20140527defaultno910
+JINA_DB=https://groups.nscl.msu.edu/jina/reaclib/db
+get >"$DOWNLOAD_DIR"/"$REACLIB_VER".gz \
+    "$JINA_DB"/reaclibs/"$REACLIB_VER".gz
+get >"$DOWNLOAD_DIR"/winvn_v2.0.dat \
+    "$JINA_DB"/associated_files/Recommended/winvn_v2.0.dat
+
+# origin: http://cococubed.asu.edu/code_pages/net_bigbang.shtml
+get >"$DOWNLOAD_DIR"/bigbang.tbz \
+    http://cococubed.asu.edu/codes/burn8/bigbang.tbz
+
+unzip -od xnet_public "$DOWNLOAD_DIR"/xnet_public.zip
+(
+    cd xnet_public
+    (
+        cd branches/public/source
+        case "$FC" in
+            *gfortran)
+                mv Makefile_local_gfortran Makefile_local;;
+            *ifort)
+                mv Makefile_local_ifort Makefile_local;;
+        esac
+        make
+    )
+    (
+        cd branches/public
+        source/xnet >xnet.out
+    )
+)
+
+mkdir -p reducereaclib
+(
+    cd reducereaclib
+    tar xzf ../"$DOWNLOAD_DIR"/reducereaclib.tar.gz
+)
+
+tar xf "$DOWNLOAD_DIR"/VH1.tar
+rm -rf ._VH1
+(
+    cd VH1
+    (
+        cd src/Starter
+        make F90="$FC"
+    )
+    ./vh1-starter
+    (
+        cd output
+    )
+)
+
+cp "$DOWNLOAD_DIR"/"$REACLIB_VER".gz \
+   "$DOWNLOAD_DIR"/"$REACLIB_VER".copy.gz
+gzip >reducereaclib/INPUT/rawreaclib -cd \
+     "$DOWNLOAD_DIR"/"$REACLIB_VER".copy.gz
+cp "$DOWNLOAD_DIR"/winvn_v2.0.dat reducereaclib/INPUT/winvn
+
+(
+    cd reducereaclib
+    "$FC" -O2 -o reducereaclib reducereaclib.f
+    ./reducereaclib
+)
+
+tar xzf "$DOWNLOAD_DIR"/bigbang.tbz
+(
+    cd bigbang
+    "$FC" -O2 -o public_bigbang public_bigbang.f90
+    ./public_bigbang <<EOF
+0
+6.23e-10
+70.5
+2.725
+1e6
+??? what network file ???
+foo_
+EOF
+)
