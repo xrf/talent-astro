@@ -25,10 +25,5 @@ reaction rate is a function of temperature (!= energy)
 for MB distribution
 = integral sigma(E) E exp(-E) dE
 
-
 S-factor is slowly varying, keV-barns
 
-
-
-Questions:
-- why does the asymptotic method fail for 10^10 or higher stiffness? (What makes 10^10 special?)
