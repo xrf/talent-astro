@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import math, os, subprocess, sys
+import math, os, subprocess, sys, time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -62,7 +62,10 @@ Flat Profile at {0} GK
 0.000000e+00 {0} 1.000000E+06
 {1} {0} 1.000000E+06
         '''.strip().format(temperature, stop_time))
+    print("...")
+    start_time = time.clock()
     subprocess.check_call(["source/xnet"], stdout=FNULL)
+    print("  ({:.3f}s)".format(time.clock() - start_time))
     df = df_read("ev1")
     default_filename="ev1{}_{:010.5f}".format(tag, temperature)
     df_plot(df, x=1, ys=cols or df[0][6:-1], title="{}GK".format(temperature),
@@ -83,9 +86,12 @@ cr48  fe52  ni56  zn60
 os.chdir("xnet_public/branches/public")
 
 #.0658
-# run_xnet(.1, 1e17, override_filename="out",
-#             cols=["ni56", "si28", "s32", "o16", "mg24", "c12"])
-# sys.exit()
+
+run_xnet(5, 1e17,  override_filename="out")
+
+#run_xnet(.1, 1e17, override_filename="out",
+#            cols=["ni56", "si28", "s32", "o16", "mg24", "c12"])
+sys.exit()
 
 
 T = .1
