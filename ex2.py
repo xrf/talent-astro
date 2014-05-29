@@ -73,4 +73,4 @@ try:
         )
 except OSError:
     pass
-print("max frame #: {}".format(i))
+print("# of frames = {}".format(i - 999))
