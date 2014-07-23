@@ -37,18 +37,18 @@ write (8,*)
 
 ! Set some flags for geometry and boundary conditions
 
-sweep  = 'x'   ! default is x-sweep (only option for 1D)
-ngeom  = 2     ! Cartesian geometry
-nleft  = 0     ! Reflecting at xmin
-nright = 0     ! Reflecting at xmax
+sweep  = '{sweep}'  ! default is x-sweep (only option for 1D)
+ngeom  = {ngeom}    ! Cartesian geometry
+nleft  = {nleft}    ! Reflecting at xmin
+nright = {nright}   ! Reflecting at xmax
 
-! Create a grid of imax zones, making room for 6 'ghost zones' on each end
+! Create a grid of imax zones, making room for 'ghost zones' on each end
 
-imax = {x_count}     ! total number of real zones on grid
-nmin = 7             ! first real zone
-nmax = imax + 6      ! last real zone
-xmin = {x_min}       ! x value at left edge of grid
-xmax = {x_max}       ! x value at right edge of grid
+imax = {x_count}      ! total number of real zones on grid
+nmin = 1 + {ghost}    ! first real zone
+nmax = imax + {ghost} ! last real zone
+xmin = {x_min}        ! x value at left edge of grid
+xmax = {x_max}        ! x value at right edge of grid
 
 ! Initialize grid coordinates: xa0(n) is coordinate of left edge of zone n
 
@@ -67,15 +67,7 @@ gam    = {gamma}   ! We always need a ratio of specific heats, gamma
 
 gamm   = gam - 1.0
 
-do n = nmin, nmax
- r(n) = {density}
- p(n) = {pressure}
- u(n) = 0.0            ! velocity is zero everywhere
- v(n) = 0.0            ! note that we have to carry around the transverse
- w(n) = 0.0            ! velocities even though this is a 1D code
- f(n) = 0.0            ! set initial flattening to zero
-enddo
-p(nmin) = {blast_pressure}
+{initial_conditions}
 
 ! Write out initial data to a file
 nfile = 0

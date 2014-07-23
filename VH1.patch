@@ -1,0 +1,15 @@
+--- src/Serial/Makefile	2014-05-30 15:39:57.759930480 -0400
++++ src/Serial/Makefile	2014-05-30 15:40:35.956643294 -0400
+@@ -12,10 +12,10 @@
+ #                           netcdf data format http://www.unidata.ucar.edu/software/netcdf
+ #
+ F90 = gfortran 
+-FFLAGS = -c -O3 -I/usr/local/include
++FFLAGS = -c -O3 -I/usr/include
+ LDR=	gfortran              
+ LDRFLAGS=              
+-LIBS=  -L/usr/local/lib -lnetcdf
++LIBS=  -L/usr/local/lib -lnetcdf -lnetcdff
+ #
+ #
+ # List of objects to build multidimensional VH-1 hydro code:
